@@ -1,0 +1,14 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 6543,
+      "driver": "PostgreSQL",
+      "name": "telegrammanager",
+      "database": "telegrammanager",
+      "username": "postgres",
+      "password": "mypassword"
+    }
+  ]
+}
