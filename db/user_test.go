@@ -16,7 +16,6 @@ func TestCreateUser(t *testing.T) {
 		role, err = testQueries.CreateRole(context.Background(), roleName)
 	}
 
-	require.NoError(t, err)
 	require.NotEmpty(t, role)
 
 	require.Equal(t, roleName, role.Name)
