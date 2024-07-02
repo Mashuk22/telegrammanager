@@ -10,4 +10,7 @@ migrateup:
 migratedown:
 	sudo migrate -path db/migration -database "postgres://postgres:mypassword@localhost:6543/telegrammanager?sslmode=disable" -verbose down
 
-.PHONY: createdb dropdb migrateup migratedown
+test:
+	go test -v -cover ./...
+
+.PHONY: createdb dropdb migrateup migratedown test
