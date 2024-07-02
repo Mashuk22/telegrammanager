@@ -7,7 +7,7 @@ LIMIT 1;
 SELECT *
 FROM users
 ORDER BY username;
--- name: CreateUser :execresult
+-- name: CreateUser :one
 INSERT INTO users (
         chat_id,
         username,

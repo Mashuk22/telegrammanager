@@ -3,16 +3,14 @@
 //   sqlc v1.26.0
 // source: user.sql
 
-package sqlc
+package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/jackc/pgx/v5/pgtype"
+	"database/sql"
 )
 
-const createUser = `-- name: CreateUser :execresult
+const createUser = `-- name: CreateUser :one
 INSERT INTO users (
         chat_id,
         username,
@@ -26,16 +24,16 @@ RETURNING id, chat_id, username, first_name, last_name, role_id, is_subscribed, 
 `
 
 type CreateUserParams struct {
-	ChatID       int64       `json:"chat_id"`
-	Username     pgtype.Text `json:"username"`
-	FirstName    pgtype.Text `json:"first_name"`
-	LastName     pgtype.Text `json:"last_name"`
-	RoleID       int32       `json:"role_id"`
-	IsSubscribed pgtype.Bool `json:"is_subscribed"`
+	ChatID       int64          `json:"chat_id"`
+	Username     sql.NullString `json:"username"`
+	FirstName    sql.NullString `json:"first_name"`
+	LastName     sql.NullString `json:"last_name"`
+	RoleID       int32          `json:"role_id"`
+	IsSubscribed sql.NullBool   `json:"is_subscribed"`
 }
 
-func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (pgconn.CommandTag, error) {
-	return q.db.Exec(ctx, createUser,
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
+	row := q.db.QueryRowContext(ctx, createUser,
 		arg.ChatID,
 		arg.Username,
 		arg.FirstName,
@@ -43,6 +41,19 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (pgconn.
 		arg.RoleID,
 		arg.IsSubscribed,
 	)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.ChatID,
+		&i.Username,
+		&i.FirstName,
+		&i.LastName,
+		&i.RoleID,
+		&i.IsSubscribed,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
 }
 
 const deleteUser = `-- name: DeleteUser :exec
@@ -51,7 +62,7 @@ WHERE id = $1
 `
 
 func (q *Queries) DeleteUser(ctx context.Context, id int32) error {
-	_, err := q.db.Exec(ctx, deleteUser, id)
+	_, err := q.db.ExecContext(ctx, deleteUser, id)
 	return err
 }
 
@@ -63,7 +74,7 @@ LIMIT 1
 `
 
 func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
-	row := q.db.QueryRow(ctx, getUser, id)
+	row := q.db.QueryRowContext(ctx, getUser, id)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -86,7 +97,7 @@ ORDER BY username
 `
 
 func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
-	rows, err := q.db.Query(ctx, listUsers)
+	rows, err := q.db.QueryContext(ctx, listUsers)
 	if err != nil {
 		return nil, err
 	}
@@ -109,6 +120,9 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 		}
 		items = append(items, i)
 	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
@@ -127,17 +141,17 @@ WHERE id = $1
 `
 
 type UpdateUserParams struct {
-	ID           int32       `json:"id"`
-	ChatID       int64       `json:"chat_id"`
-	Username     pgtype.Text `json:"username"`
-	FirstName    pgtype.Text `json:"first_name"`
-	LastName     pgtype.Text `json:"last_name"`
-	RoleID       int32       `json:"role_id"`
-	IsSubscribed pgtype.Bool `json:"is_subscribed"`
+	ID           int32          `json:"id"`
+	ChatID       int64          `json:"chat_id"`
+	Username     sql.NullString `json:"username"`
+	FirstName    sql.NullString `json:"first_name"`
+	LastName     sql.NullString `json:"last_name"`
+	RoleID       int32          `json:"role_id"`
+	IsSubscribed sql.NullBool   `json:"is_subscribed"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
-	_, err := q.db.Exec(ctx, updateUser,
+	_, err := q.db.ExecContext(ctx, updateUser,
 		arg.ID,
 		arg.ChatID,
 		arg.Username,
