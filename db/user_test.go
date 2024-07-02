@@ -17,7 +17,7 @@ func TestCreateUser(t *testing.T) {
 		if err != nil {
 			require.NoError(t, err)
 		}
-		require.NotEmpty(t, role)
+		require.NotEmpty(t, role.Name)
 	}
 
 	require.Equal(t, roleName, role.Name)
