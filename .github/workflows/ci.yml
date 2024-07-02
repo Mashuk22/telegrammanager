@@ -38,6 +38,7 @@ jobs:
           git clone https://github.com/golang-migrate/migrate.git
           cd migrate
           go build -o migrate ./cmd/migrate
+          sudo mv migrate /usr/bin/migrate
 
       - name: Run migrations
         run: sudo make migrateup
