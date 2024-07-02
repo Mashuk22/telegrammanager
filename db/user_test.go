@@ -9,6 +9,18 @@ import (
 )
 
 func TestCreateUser(t *testing.T) {
+	roleName := "Regular"
+
+	role, err := testQueries.GetRole(context.Background(), 1)
+	if err == nil {
+		role, err = testQueries.CreateRole(context.Background(), roleName)
+	}
+
+	require.NoError(t, err)
+	require.NotEmpty(t, role)
+
+	require.Equal(t, roleName, role.Name)
+
 	userArg := CreateUserParams{
 		ChatID:       12341234,
 		Username:     sql.NullString{String: "username", Valid: true},
