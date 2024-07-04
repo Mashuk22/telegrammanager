@@ -3,13 +3,13 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"io"
 	"log"
-	"os"
+	"net"
 
 	"github.com/Mashuk22/telegrammanager/db"
-	userpb "github.com/Mashuk22/telegrammanager/pkg/user_service"
-	"google.golang.org/protobuf/proto"
+	"github.com/Mashuk22/telegrammanager/internal/app/userservice"
+	"github.com/Mashuk22/telegrammanager/pkg/userpb"
+	"google.golang.org/grpc"
 
 	_ "github.com/lib/pq"
 )
@@ -27,21 +27,16 @@ func main() {
 	}
 	db.New(conn)
 
-	file, err := os.OpenFile("../output.bin", os.O_RDONLY, 0)
+	server := grpc.NewServer()
+	userpb.RegisterUserServiceServer(server, &userservice.Server{})
+	listener, err := net.Listen("tcp", "localhost:50001")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	result, err := io.ReadAll(file)
-	if err != nil {
-		log.Fatal(err)
+	fmt.Println("Starting gRPC server...")
+	if err := server.Serve(listener); err != nil {
+		log.Fatalf("failer do serve %v", err)
 	}
 
-	params := &userpb.User{}
-	err = proto.Unmarshal(result, params)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("result:\n%v\n\n\n", params)
 }

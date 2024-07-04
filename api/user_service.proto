@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package mashuk22.telegrammanager.user_service.v3;
-option go_package = "pkg/user-service";
+option go_package = "pkg/userpb";
 
 
 service UserService {
