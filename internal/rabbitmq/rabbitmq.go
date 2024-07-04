@@ -17,7 +17,7 @@ func NewService() *RabbitMQ {
 }
 func (rmq *RabbitMQ) Connect() error {
 	var err error
-	rmq.Conn, err = amqp091.Dial("amqp://guest:guest@localhost:5672")
+	rmq.Conn, err = amqp091.Dial("amqp://guest:guest@rabbitmq:5672")
 	if err != nil {
 		return err
 	}

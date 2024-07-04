@@ -1,0 +1,8 @@
+FROM golang:latest
+
+WORKDIR /tgclient
+
+COPY . .
+
+CMD [ "go", "run", "cmd/tgclient/main.go" ]
+
