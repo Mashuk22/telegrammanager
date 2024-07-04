@@ -13,4 +13,7 @@ migratedown:
 test:
 	go test -v -cover ./...
 
-.PHONY: createdb dropdb migrateup migratedown test
+run:
+	go run cmd/telegrammanager/main.go	
+
+.PHONY: createdb dropdb migrateup migratedown test run

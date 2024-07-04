@@ -8,6 +8,7 @@ import (
 
 	"github.com/Mashuk22/telegrammanager/db"
 	"github.com/Mashuk22/telegrammanager/internal/app/userservice"
+	"github.com/Mashuk22/telegrammanager/internal/rabbitmq"
 	"github.com/Mashuk22/telegrammanager/pkg/userpb"
 	"google.golang.org/grpc"
 
@@ -30,6 +31,12 @@ func main() {
 	server := grpc.NewServer()
 	userpb.RegisterUserServiceServer(server, &userservice.Server{})
 	listener, err := net.Listen("tcp", "localhost:50001")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	rmq := rabbitmq.NewService()
+	err = rmq.Connect()
 	if err != nil {
 		log.Fatal(err)
 	}
