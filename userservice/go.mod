@@ -3,8 +3,9 @@ module github.com/Mashuk22/telegrammanager/userservice
 go 1.22.0
 
 require (
-	github.com/Mashuk22/telegrammanager/pkg/userpb v0.0.0-00010101000000-000000000000
+	github.com/Mashuk22/telegrammanager/userservice/pkg/userpb v0.0.0-00010101000000-000000000000
 	github.com/lib/pq v1.10.9
+	github.com/rabbitmq/amqp091-go v1.10.0
 	github.com/stretchr/testify v1.9.0
 	google.golang.org/grpc v1.65.0
 )
@@ -13,7 +14,6 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/kr/pretty v0.3.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/rabbitmq/amqp091-go v1.10.0 // indirect
 	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
 	golang.org/x/text v0.15.0 // indirect
