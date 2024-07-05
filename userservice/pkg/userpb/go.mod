@@ -1,4 +1,4 @@
-module github.com/Mashuk22/telegrammanager/pkg/userpb
+module github.com/Mashuk22/telegrammanager/userservice/pkg/userpb
 
 go 1.22.0
 

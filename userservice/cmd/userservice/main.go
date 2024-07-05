@@ -8,6 +8,7 @@ import (
 
 	"github.com/Mashuk22/telegrammanager/db"
 	"github.com/Mashuk22/telegrammanager/internal/app/userservice"
+	"github.com/Mashuk22/telegrammanager/internal/rabbitmq"
 	"github.com/Mashuk22/telegrammanager/pkg/userpb"
 	"google.golang.org/grpc"
 
@@ -33,6 +34,20 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	rmq := rabbitmq.NewService()
+	err = rmq.Connect()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rmq.Conn.Close()
+
+	err = rmq.Publish("Hi")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	go rmq.Consume()
 
 	fmt.Println("Starting gRPC server...")
 	if err := server.Serve(listener); err != nil {

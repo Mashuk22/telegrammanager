@@ -16,10 +16,13 @@ test:
 run:
 	go run cmd/telegrammanager/main.go	
 
-dcup:
+dcu:
 	docker compose up -d
 
-dcdown:
+dcub:
+	docker compose up -d --build
+
+dcd:
 	docker compose down
 
-.PHONY: createdb dropdb migrateup migratedown test run dcup dcdown
+.PHONY: createdb dropdb migrateup migratedown test run dcup dcdown dcub

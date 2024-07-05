@@ -1,4 +1,4 @@
-module github.com/Mashuk22/telegrammanager
+module github.com/Mashuk22/telegrammanager/userservice
 
 go 1.22.0
 
@@ -23,4 +23,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/Mashuk22/telegrammanager/pkg/userpb => ./pkg/userpb
+replace github.com/Mashuk22/telegrammanager/userservice/pkg/userpb => ./pkg/userpb
