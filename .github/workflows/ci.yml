@@ -3,6 +3,8 @@ name: ci-test
 on:
   push:
     branches: ["main", "dev"]
+    paths:
+      - "userservice/**"
 
 jobs:
   test:
