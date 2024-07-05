@@ -41,8 +41,8 @@ jobs:
           sudo mv migrate /usr/bin/migrate
 
       - name: Run migrations
-        run: make usmigrateup
-        working-directory: erservice
+        run: make migrateup
+        working-directory: userservice
 
       - name: Test
         run: make test
