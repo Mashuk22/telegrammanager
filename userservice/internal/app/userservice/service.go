@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/Mashuk22/telegrammanager/pkg/userpb"
+	"github.com/Mashuk22/telegrammanager/userservice/pkg/userpb"
 )
 
 type Server struct {

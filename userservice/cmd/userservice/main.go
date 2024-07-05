@@ -6,10 +6,10 @@ import (
 	"log"
 	"net"
 
-	"github.com/Mashuk22/telegrammanager/db"
-	"github.com/Mashuk22/telegrammanager/internal/app/userservice"
-	"github.com/Mashuk22/telegrammanager/internal/rabbitmq"
-	"github.com/Mashuk22/telegrammanager/pkg/userpb"
+	"github.com/Mashuk22/telegrammanager/userservice/db"
+	"github.com/Mashuk22/telegrammanager/userservice/internal/app/userservice"
+	"github.com/Mashuk22/telegrammanager/userservice/internal/rabbitmq"
+	"github.com/Mashuk22/telegrammanager/userservice/pkg/userpb"
 	"google.golang.org/grpc"
 
 	_ "github.com/lib/pq"
