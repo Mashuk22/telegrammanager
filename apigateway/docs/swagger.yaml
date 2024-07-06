@@ -1,0 +1,62 @@
+definitions:
+  model.User:
+    properties:
+      chat_id:
+        type: integer
+      created_at:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      is_subscribed:
+        type: boolean
+      last_name:
+        type: string
+      role_id:
+        type: integer
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Get Users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+      summary: Get Users
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: CreateUserHandler
+      parameters:
+      - description: Account ID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+      summary: CreateUserHandler
+      tags:
+      - Users
+swagger: "2.0"

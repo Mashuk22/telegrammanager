@@ -1,69 +1,24 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"log"
-	"net/http"
-
-	"github.com/Mashuk22/telegrammanager/pkg/userpb"
+	"github.com/Mashuk22/telegrammanager/apigateway/controller"
+	_ "github.com/Mashuk22/telegrammanager/apigateway/docs"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
-)
-
-var (
-	userServiceClient userpb.UserServiceClient
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
-	initGRPCClients()
+	c := controller.NewController()
+	c.InitGRPCClients()
 
 	ginEngine := gin.Default()
 
-	ginEngine.GET("/users", getUsersHandler)
-	ginEngine.GET("/users/:id", getUserHandler)
-	ginEngine.POST("/users", createUserHandler)
+	ginEngine.GET("/users", c.GetUsersHandler)
+	ginEngine.GET("/users/:id", c.GetUserHandler)
+	ginEngine.POST("/users", c.CreateUserHandler)
 
-	ginEngine.Run()
-}
+	ginEngine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-func getUsersHandler(c *gin.Context) {
-	fmt.Printf("getUsersHandler response")
-}
-
-func getUserHandler(c *gin.Context) {
-	resp, err := userServiceClient.ListUsers(context.Background(), &userpb.ListUsersRequest{})
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
-		return
-	}
-
-	c.JSON(http.StatusOK, resp)
-}
-
-func createUserHandler(c *gin.Context) {
-	var req userpb.CreateUserRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	resp, err := userServiceClient.CreateUser(context.Background(), &req)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
-		return
-	}
-
-	c.JSON(http.StatusCreated, resp)
-}
-
-func initGRPCClients() {
-	conn, err := grpc.NewClient("server:7077", grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("NewClient faild: %v", err)
-	}
-	defer conn.Close()
-
-	userServiceClient = userpb.NewUserServiceClient(conn)
+	ginEngine.Run(":8080")
 }
