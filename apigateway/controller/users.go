@@ -7,6 +7,13 @@ import (
 
 	"github.com/Mashuk22/telegrammanager/pkg/userpb"
 	"github.com/gin-gonic/gin"
+	"go.opentelemetry.io/otel/sdk/trace"
+)
+
+const name = "usersevice"
+
+var (
+	TracerProvider *trace.TracerProvider
 )
 
 // GetUsersHandler godoc
@@ -19,6 +26,12 @@ import (
 //	@Success		200	{object}	model.User
 //	@Router			/users [get]
 func (c *Controller) GetUsersHandler(ctx *gin.Context) {
+	tracer := TracerProvider.Tracer(name)
+	_, span := tracer.Start(ctx.Request.Context(), "getUsers")
+	defer func() {
+		span.End()
+	}()
+
 	resp, err := c.UserServiceClient.ListUsers(context.Background(), &userpb.ListUsersRequest{})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err})
