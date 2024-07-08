@@ -1,0 +1,56 @@
+version: "3"
+networks:
+  tgm-network:
+    external: true
+
+services:
+  userservice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7077:7077"
+    environment:
+      - DB_HOST=telegrammanager-postgres
+      - DB_PORT=5432
+      - DB_NAME=telegrammanager
+      - DB_USER=postgres
+      - DB_PASSWORD=mypassword
+    depends_on:
+      - postgres
+      - rabbitmq
+    restart: always
+    networks:
+      - tgm-network
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "6543:5432"
+    environment:
+      - POSTGRES_DB=telegrammanager
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mypassword
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - tgm-network
+
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - tgm-network
+
+volumes:
+  postgres-data:
+  rabbitmq-data:
